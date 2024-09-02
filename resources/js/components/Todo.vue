@@ -35,19 +35,33 @@
         </div>
         <div class="mb-4">
             <button
-                class="btn btn-outline-primary me-2"
+                :class="[
+                    'btn',
+                    'btn-outline-primary',
+                    'me-2',
+                    { active: status == 'all' },
+                ]"
                 @click="filterTasks('all')"
             >
                 All
             </button>
             <button
-                class="btn btn-outline-success me-2"
+                :class="[
+                    'btn',
+                    'btn-outline-success',
+                    'me-2',
+                    { active: status == 'completed' },
+                ]"
                 @click="filterTasks('completed')"
             >
                 Completed
             </button>
             <button
-                class="btn btn-outline-warning"
+                :class="[
+                    'btn',
+                    'btn-outline-warning',
+                    { active: status == 'pending' },
+                ]"
                 @click="filterTasks('pending')"
             >
                 Pending
@@ -63,8 +77,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(task, index) in tasks" :key="task.id">
-                    <td>{{ index + 1 }}</td>
+                <tr v-for="task in tasks" :key="task.id">
+                    <td>{{ task.id }}</td>
                     <td>{{ task.task }}</td>
                     <td>{{ task.completed ? "Completed" : "Pending" }}</td>
                     <td>
@@ -107,6 +121,12 @@ export default {
 
     mounted() {
         this.fetch();
+    },
+
+    watch: {
+        status(newStatus) {
+            this.fetch();
+        },
     },
 
     methods: {
@@ -197,6 +217,10 @@ export default {
                 this.alertType = "alert-danger";
                 this.alertVisible = true;
             }
+        },
+
+        filterTasks(status) {
+            this.status = status;
         },
     },
 };
